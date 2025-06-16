@@ -1,0 +1,4 @@
+1. backboone.py: 이미지 처리를 위한 ResNet 등의 백본 네트워크 구현
+2. detr_vae.py: CVAE(Conditional VAE)로서 구현된 ACT 모델의 핵심 구조가 정의
+3. position_encoding.py: 트랜스포머에서 시퀀스 요소의 위치 정보를 제공하기 위한 포지션 인코딩 구현
+4. transformer.py: 트랜스포머 인코더와 디코더 모듈 구현

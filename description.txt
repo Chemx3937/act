@@ -1,0 +1,11 @@
+1. main.py:
+2. setup.py:
+3. constants.py: 레포지토리 전반에서 사용되는 상수를 정의
+4. ee_sim_env.py: 
+5. imitate_episodes.py: ACT를 train 시키는 코드
+6. policy.py: 
+7. record_sim-episodes.py: 
+8. scripted_policy.py: 시뮬레이션 환경에서 데모 데이터를 생성하기 위한 task별 policy 정의
+9. sim_env.py: Mujoco + DM_Control 기반의 시뮬레이션 환경 (Joint Space Control)을 정의하는 파일
+10. utils.py: 데이터 로딩, 헬퍼 함수 등 다양한 유틸리티 함수를 포함
+11. visualize_episodes.py: 수집된 데모 데이터(.hdf5 파일)를 시각화하는 스크립트

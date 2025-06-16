@@ -1,7 +1,13 @@
+# 실행할 Task 정의
+# Initial Pose 정의
+# Gripper Limit 설정
+# Gripper , Joint 제어 함수 정의
+
 import pathlib
 
 ### Task parameters
-DATA_DIR = '<put your data dir here>'
+# DATA_DIR = '<put your data dir here>'
+DATA_DIR = '/home/chem/act/data'
 SIM_TASK_CONFIGS = {
     'sim_transfer_cube_scripted':{
         'dataset_dir': DATA_DIR + '/sim_transfer_cube_scripted',
@@ -36,8 +42,12 @@ SIM_TASK_CONFIGS = {
 DT = 0.02
 JOINT_NAMES = ["waist", "shoulder", "elbow", "forearm_roll", "wrist_angle", "wrist_rotate"]
 START_ARM_POSE = [0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239,  0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239]
+# START_ARM_POSE = [waist, shoulder, shoulder, forearm_roll, wrist_angle, wrist_rotate, gripper1,2] x 2
+
 
 XML_DIR = str(pathlib.Path(__file__).parent.resolve()) + '/assets/' # note: absolute path
+# Sim에서만 사용
+# MuJoCo Sim에서 사용하는 URDF 경로 설정
 
 # Left finger position limits (qpos[7]), right_finger = -1 * left_finger
 MASTER_GRIPPER_POSITION_OPEN = 0.02417

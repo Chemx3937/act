@@ -138,3 +138,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# data 디렉토리의 자료 push X
+data/
+checkpoint/

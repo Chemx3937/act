@@ -1,0 +1,353 @@
+(aloha) chem@chem:~/act$ python3 record_sim_episodes.py --task_name sim_transfer_cube_scripted --dataset_dir data --num_episodes 50 --onscreen_render
+episode_idx=0
+Rollout out EE space scripted policy
+episode_idx=0 Successful, episode_return=629
+Replaying joint commands
+episode_idx=0 Successful, episode_return=639
+Saving: 0.6 secs
+
+episode_idx=1
+Rollout out EE space scripted policy
+episode_idx=1 Successful, episode_return=621
+Replaying joint commands
+episode_idx=1 Successful, episode_return=646
+Saving: 3.6 secs
+
+episode_idx=2
+Rollout out EE space scripted policy
+episode_idx=2 Successful, episode_return=617
+Replaying joint commands
+episode_idx=2 Successful, episode_return=628
+Saving: 0.7 secs
+
+episode_idx=3
+Rollout out EE space scripted policy
+episode_idx=3 Successful, episode_return=630
+Replaying joint commands
+episode_idx=3 Successful, episode_return=637
+Saving: 0.6 secs
+
+episode_idx=4
+Rollout out EE space scripted policy
+episode_idx=4 Successful, episode_return=626
+Replaying joint commands
+episode_idx=4 Successful, episode_return=641
+Saving: 0.6 secs
+
+episode_idx=5
+Rollout out EE space scripted policy
+episode_idx=5 Successful, episode_return=627
+Replaying joint commands
+episode_idx=5 Successful, episode_return=642
+Saving: 0.6 secs
+
+episode_idx=6
+Rollout out EE space scripted policy
+episode_idx=6 Successful, episode_return=621
+Replaying joint commands
+episode_idx=6 Successful, episode_return=648
+Saving: 0.6 secs
+
+episode_idx=7
+Rollout out EE space scripted policy
+episode_idx=7 Successful, episode_return=635
+Replaying joint commands
+episode_idx=7 Successful, episode_return=632
+Saving: 0.6 secs
+
+episode_idx=8
+Rollout out EE space scripted policy
+episode_idx=8 Successful, episode_return=625
+Replaying joint commands
+episode_idx=8 Successful, episode_return=644
+Saving: 0.6 secs
+
+episode_idx=9
+Rollout out EE space scripted policy
+episode_idx=9 Successful, episode_return=635
+Replaying joint commands
+episode_idx=9 Successful, episode_return=641
+Saving: 0.6 secs
+
+episode_idx=10
+Rollout out EE space scripted policy
+episode_idx=10 Successful, episode_return=624
+Replaying joint commands
+episode_idx=10 Successful, episode_return=641
+Saving: 0.7 secs
+
+episode_idx=11
+Rollout out EE space scripted policy
+episode_idx=11 Successful, episode_return=627
+Replaying joint commands
+episode_idx=11 Successful, episode_return=635
+Saving: 0.7 secs
+
+episode_idx=12
+Rollout out EE space scripted policy
+episode_idx=12 Successful, episode_return=625
+Replaying joint commands
+episode_idx=12 Successful, episode_return=631
+Saving: 0.6 secs
+
+episode_idx=13
+Rollout out EE space scripted policy
+episode_idx=13 Successful, episode_return=616
+Replaying joint commands
+episode_idx=13 Successful, episode_return=639
+Saving: 0.6 secs
+
+episode_idx=14
+Rollout out EE space scripted policy
+episode_idx=14 Successful, episode_return=628
+Replaying joint commands
+episode_idx=14 Successful, episode_return=631
+Saving: 0.6 secs
+
+episode_idx=15
+Rollout out EE space scripted policy
+episode_idx=15 Successful, episode_return=614
+Replaying joint commands
+episode_idx=15 Successful, episode_return=638
+Saving: 0.6 secs
+
+episode_idx=16
+Rollout out EE space scripted policy
+episode_idx=16 Successful, episode_return=614
+Replaying joint commands
+episode_idx=16 Successful, episode_return=644
+Saving: 0.6 secs
+
+episode_idx=17
+Rollout out EE space scripted policy
+episode_idx=17 Successful, episode_return=626
+Replaying joint commands
+episode_idx=17 Successful, episode_return=646
+Saving: 0.6 secs
+
+episode_idx=18
+Rollout out EE space scripted policy
+episode_idx=18 Successful, episode_return=624
+Replaying joint commands
+episode_idx=18 Successful, episode_return=633
+Saving: 0.6 secs
+
+episode_idx=19
+Rollout out EE space scripted policy
+episode_idx=19 Successful, episode_return=633
+Replaying joint commands
+episode_idx=19 Successful, episode_return=639
+Saving: 0.6 secs
+
+episode_idx=20
+Rollout out EE space scripted policy
+episode_idx=20 Successful, episode_return=627
+Replaying joint commands
+episode_idx=20 Successful, episode_return=650
+Saving: 0.6 secs
+
+episode_idx=21
+Rollout out EE space scripted policy
+episode_idx=21 Successful, episode_return=613
+Replaying joint commands
+episode_idx=21 Successful, episode_return=640
+Saving: 0.6 secs
+
+episode_idx=22
+Rollout out EE space scripted policy
+episode_idx=22 Successful, episode_return=618
+Replaying joint commands
+episode_idx=22 Successful, episode_return=626
+Saving: 0.6 secs
+
+episode_idx=23
+Rollout out EE space scripted policy
+episode_idx=23 Successful, episode_return=626
+Replaying joint commands
+episode_idx=23 Successful, episode_return=646
+Saving: 0.7 secs
+
+episode_idx=24
+Rollout out EE space scripted policy
+episode_idx=24 Successful, episode_return=608
+Replaying joint commands
+episode_idx=24 Successful, episode_return=629
+Saving: 0.7 secs
+
+episode_idx=25
+Rollout out EE space scripted policy
+episode_idx=25 Successful, episode_return=627
+Replaying joint commands
+episode_idx=25 Successful, episode_return=646
+Saving: 0.6 secs
+
+episode_idx=26
+Rollout out EE space scripted policy
+episode_idx=26 Successful, episode_return=636
+Replaying joint commands
+episode_idx=26 Successful, episode_return=638
+Saving: 0.6 secs
+
+episode_idx=27
+Rollout out EE space scripted policy
+episode_idx=27 Successful, episode_return=623
+Replaying joint commands
+episode_idx=27 Successful, episode_return=641
+Saving: 0.7 secs
+
+episode_idx=28
+Rollout out EE space scripted policy
+episode_idx=28 Successful, episode_return=625
+Replaying joint commands
+episode_idx=28 Successful, episode_return=635
+Saving: 0.6 secs
+
+episode_idx=29
+Rollout out EE space scripted policy
+episode_idx=29 Successful, episode_return=609
+Replaying joint commands
+episode_idx=29 Successful, episode_return=649
+Saving: 0.7 secs
+
+episode_idx=30
+Rollout out EE space scripted policy
+episode_idx=30 Successful, episode_return=625
+Replaying joint commands
+episode_idx=30 Successful, episode_return=647
+Saving: 0.6 secs
+
+episode_idx=31
+Rollout out EE space scripted policy
+episode_idx=31 Successful, episode_return=628
+Replaying joint commands
+episode_idx=31 Successful, episode_return=634
+Saving: 0.6 secs
+
+episode_idx=32
+Rollout out EE space scripted policy
+episode_idx=32 Successful, episode_return=622
+Replaying joint commands
+episode_idx=32 Successful, episode_return=650
+Saving: 0.6 secs
+
+episode_idx=33
+Rollout out EE space scripted policy
+episode_idx=33 Successful, episode_return=618
+Replaying joint commands
+episode_idx=33 Successful, episode_return=638
+Saving: 0.6 secs
+
+episode_idx=34
+Rollout out EE space scripted policy
+episode_idx=34 Successful, episode_return=625
+Replaying joint commands
+episode_idx=34 Successful, episode_return=649
+Saving: 0.6 secs
+
+episode_idx=35
+Rollout out EE space scripted policy
+episode_idx=35 Successful, episode_return=624
+Replaying joint commands
+episode_idx=35 Successful, episode_return=637
+Saving: 0.9 secs
+
+episode_idx=36
+Rollout out EE space scripted policy
+episode_idx=36 Successful, episode_return=626
+Replaying joint commands
+episode_idx=36 Successful, episode_return=642
+Saving: 0.6 secs
+
+episode_idx=37
+Rollout out EE space scripted policy
+episode_idx=37 Successful, episode_return=627
+Replaying joint commands
+episode_idx=37 Successful, episode_return=641
+Saving: 0.6 secs
+
+episode_idx=38
+Rollout out EE space scripted policy
+episode_idx=38 Successful, episode_return=626
+Replaying joint commands
+episode_idx=38 Successful, episode_return=640
+Saving: 0.6 secs
+
+episode_idx=39
+Rollout out EE space scripted policy
+episode_idx=39 Successful, episode_return=630
+Replaying joint commands
+episode_idx=39 Successful, episode_return=633
+Saving: 0.6 secs
+
+episode_idx=40
+Rollout out EE space scripted policy
+episode_idx=40 Successful, episode_return=622
+Replaying joint commands
+episode_idx=40 Successful, episode_return=643
+Saving: 0.7 secs
+
+episode_idx=41
+Rollout out EE space scripted policy
+episode_idx=41 Successful, episode_return=627
+Replaying joint commands
+episode_idx=41 Successful, episode_return=645
+Saving: 0.6 secs
+
+episode_idx=42
+Rollout out EE space scripted policy
+episode_idx=42 Successful, episode_return=633
+Replaying joint commands
+episode_idx=42 Successful, episode_return=636
+Saving: 0.7 secs
+
+episode_idx=43
+Rollout out EE space scripted policy
+episode_idx=43 Successful, episode_return=621
+Replaying joint commands
+episode_idx=43 Successful, episode_return=646
+Saving: 0.6 secs
+
+episode_idx=44
+Rollout out EE space scripted policy
+episode_idx=44 Successful, episode_return=629
+Replaying joint commands
+episode_idx=44 Successful, episode_return=635
+Saving: 0.6 secs
+
+episode_idx=45
+Rollout out EE space scripted policy
+episode_idx=45 Successful, episode_return=620
+Replaying joint commands
+episode_idx=45 Successful, episode_return=630
+Saving: 0.6 secs
+
+episode_idx=46
+Rollout out EE space scripted policy
+episode_idx=46 Successful, episode_return=610
+Replaying joint commands
+episode_idx=46 Successful, episode_return=636
+Saving: 0.6 secs
+
+episode_idx=47
+Rollout out EE space scripted policy
+episode_idx=47 Successful, episode_return=632
+Replaying joint commands
+episode_idx=47 Successful, episode_return=639
+Saving: 0.6 secs
+
+episode_idx=48
+Rollout out EE space scripted policy
+episode_idx=48 Successful, episode_return=625
+Replaying joint commands
+episode_idx=48 Successful, episode_return=644
+Saving: 0.6 secs
+
+episode_idx=49
+Rollout out EE space scripted policy
+episode_idx=49 Successful, episode_return=625
+Replaying joint commands
+episode_idx=49 Successful, episode_return=643
+Saving: 0.6 secs
+
+Saved to data
+Success: 50 / 50
