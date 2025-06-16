@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+
+# 수정 List:
+# 1. action에서 Leader, 그리퍼의 pos 받게 하기 <- Joint Copy 방법 설치되면 하기
+# 2. Image shape: 480,640,3
+# 3. 초기위치 설정 필요 <- 해보고 성능 안좋으면 추가하기
+
 import sys
 sys.path.append('/home/vision/catkin_ws/src/robotory_rb10_rt/scripts')
 import h5py
@@ -12,6 +18,9 @@ from scipy.spatial.transform import Rotation as R
 import pyrealsense2 as rs
 import cv2
 import time
+from datetime import datetime
+import os
+
 
 def init_buffer():
     return {
@@ -29,8 +38,18 @@ def init_buffer():
         'action': []
     }
 
-def save_to_hdf5(buffer, filename='tele_data_0614_act'):
-    save_path = f'/home/vision/catkin_ws/src/teleop_data/data/{filename}.hdf5'
+def save_to_hdf5(buffer, i=None):
+    today = datetime.now().strftime('%m%d')  # '0616' 형식
+    base_dir = '/home/vision/catkin_ws/src/teleop_data/act_data'
+
+    if i is None:
+        # 자동 인덱스 결정: 같은 날짜의 기존 파일 개수 세기
+        existing = [f for f in os.listdir(base_dir) if f.startswith(f'tele_data_{today}_') and f.endswith('.hdf5')]
+        i = len(existing)
+
+    filename = f'tele_data_{today}_Episode{i}.hdf5'
+    save_path = os.path.join(base_dir, filename)
+
     with h5py.File(save_path, 'w') as f:
         f.attrs['sim'] = False
         obs = f.create_group('observations')
@@ -48,6 +67,7 @@ def save_to_hdf5(buffer, filename='tele_data_0614_act'):
         f.create_dataset('action', data=np.array(buffer['action'], dtype=np.float64))
 
         print(f"[HDF5] Saved {N} timesteps to {save_path}")
+        return i
 
 def gripper_callback(msg):
     global latest_gripper_qpos
@@ -78,7 +98,8 @@ def get_device_serials():
     return serials
 
 def main():
-    global i
+    # global i
+    # i=0
 
     serials = get_device_serials()
     serial_d435 = serials[0]
@@ -113,7 +134,7 @@ def main():
     listener.start()
 
     buffer = init_buffer()
-    rate = rospy.Rate(20) # rate 왜 20Hz인지 물어보기
+    rate = rospy.Rate(20) # rate 왜 20Hz인지 물어보기 # act는 50Hz
 
     # pose, gripper 값 정규화위한 변수
     # MAX_TRANS = 0.015
@@ -208,12 +229,11 @@ def main():
         elif not recording and len(buffer['action']) > 0:
             while True:
                 data_store = input("Store demo data? (y/n): ").strip().lower()
-                if data_store == 'y':
-                    save_to_hdf5(buffer)
-                    print(f"'demo_{i}' Data stored.")
-                    i += 1
+                if data_store.strip() == 'y':
+                    saved_i = save_to_hdf5(buffer)
+                    print(f"'demo_{saved_i}' Data stored.")
                     break
-                elif data_store == 'n':
+                elif data_store.strip() == 'n':
                     print("Data discarded.")
                     break
                 else:
