@@ -12,16 +12,21 @@ TASK_CONFIGS = {
         'dataset_dir': DATA_DIR + '/rb_transfer_box',
         'num_episodes': 50,
         'episode_len': 1000,
-        'camera_names': ['top']
+        'camera_names': ['cam_high', 'cam_low']
     },
 }
 
 ### ALOHA fixed constants
-DT = 0.02
-# JOINT_NAMES = ["waist", "shoulder", "elbow", "forearm_roll", "wrist_angle", "wrist_rotate"]
-# START_ARM_POSE = [0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239,  0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239]
-JOINT_NAMES = ["base", "shoulder", "elbow", "wrist1", "wrist2", "wrist3"]
-START_ARM_POSE = [0, 0, 0, 0, 0, 0, 0]
+# DT = 0.02 # 50Hz(ACT 원본)
+DT = 0.05 # 20Hz (수정)
+
+# 원본
+JOINT_NAMES = ["waist", "shoulder", "elbow", "forearm_roll", "wrist_angle", "wrist_rotate"]
+START_ARM_POSE = [0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239,  0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239]
+
+# Custom
+# JOINT_NAMES = ["base", "shoulder", "elbow", "wrist1", "wrist2", "wrist3"]
+# START_ARM_POSE = [0, 0, 0, 0, 0, 0, 0]
 # START_ARM_POSE = [base", "shoulder", "elbow", "wrist1", "wrist2", "wrist3, "gripper"]
 
 # Left finger position limits (qpos[7]), right_finger = -1 * left_finger

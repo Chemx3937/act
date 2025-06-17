@@ -203,19 +203,25 @@ def main():
             color_image0 = np.asanyarray(color_frame0.get_data())
             color_image1 = np.asanyarray(color_frame1.get_data())
 
-            h, w = color_image0.shape[:2]
-            start_x = (w - CROP_SIZE) // 2
-            image0 = color_image0[:, start_x:start_x+CROP_SIZE]
-            image1 = color_image1[:, start_x:start_x+CROP_SIZE]
+            # Image shape 후처리
+            # h, w = color_image0.shape[:2]
+            # start_x = (w - CROP_SIZE) // 2
+            # image0 = color_image0[:, start_x:start_x+CROP_SIZE]
+            # image1 = color_image1[:, start_x:start_x+CROP_SIZE]
 
-            image0 = cv2.resize(image0, (120, 120))
-            image1 = cv2.resize(image1, (120, 120))
+            # image0 = cv2.resize(image0, (120, 120))
+            # image1 = cv2.resize(image1, (120, 120))
+            # buffer['observations']['images']['cam_high'].append(image0.copy())
+            # buffer['observations']['images']['cam_low'].append(image1.copy())
 
             # for cam_name in ['cam_high', 'cam_low', 'cam_left_wrist', 'cam_right_wrist']:
             # camera 여러 대 사용시 주석 해제
 
-            buffer['observations']['images']['cam_high'].append(image0.copy())
-            buffer['observations']['images']['cam_low'].append(image1.copy())
+            image0 = color_image0.copy()
+            image1 = color_image1.copy()
+            
+            buffer['observations']['images']['cam_high'].append(image0)
+            buffer['observations']['images']['cam_low'].append(image1)
 
 
             ## action 계산 (Leader의 qpos)
