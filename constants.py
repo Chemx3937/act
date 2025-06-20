@@ -35,6 +35,12 @@ SIM_TASK_CONFIGS = {
         'num_episodes': 50,
         'episode_len': 500,
         'camera_names': ['top']
+    },    
+    'rb_transfer_can':{
+        'dataset_dir': DATA_DIR + '/rb_transfer_can',
+        'num_episodes': 50,
+        'episode_len': 1000,
+        'camera_names': ['cam_high', 'cam_low']
     },
 }
 

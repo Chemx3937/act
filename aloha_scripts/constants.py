@@ -1,6 +1,7 @@
 ### Task parameters
 
-DATA_DIR = '<put your data dir here>'
+# DATA_DIR = '<put your data dir here>'
+DATA_DIR = '/home/chem/act/data'
 TASK_CONFIGS = {
     'aloha_wear_shoe':{
         'dataset_dir': DATA_DIR + '/aloha_wear_shoe',
@@ -8,10 +9,10 @@ TASK_CONFIGS = {
         'episode_len': 1000,
         'camera_names': ['cam_high', 'cam_low', 'cam_left_wrist', 'cam_right_wrist']
     },
-    'rb_transfer_box':{
-        'dataset_dir': DATA_DIR + '/rb_transfer_box',
+    'rb_transfer_can':{
+        'dataset_dir': DATA_DIR + '/rb_transfer_can',
         'num_episodes': 50,
-        'episode_len': 1000,
+        'episode_len': 250,
         'camera_names': ['cam_high', 'cam_low']
     },
 }

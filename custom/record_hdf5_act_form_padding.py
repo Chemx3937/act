@@ -38,18 +38,22 @@ def init_buffer():
         'action': []
     }
 
+# 모든 Demonstration 길이 동일하게 하기위해 추가
+FIXED_EPISODE_LEN = 250
+
+
 def save_to_hdf5(buffer, i=None):
     today = datetime.now().strftime('%m%d')  # '0616' 형식
-    data_dir = '/home/vision/catkin_ws/src/teleop_data/act_data'
+    data_dir = f'/home/vision/catkin_ws/src/teleop_data/act_data/{today}'
     if not os.path.isdir(data_dir):
         os.makedirs(data_dir)
 
     if i is None:
         # 자동 인덱스 결정: 같은 날짜의 기존 파일 개수 세기
-        existing = [f for f in os.listdir(data_dir) if f.startswith(f'tele_data_{today}_') and f.endswith('.hdf5')]
+        existing = [f for f in os.listdir(data_dir) if f.startswith(f'episode_') and f.endswith('.hdf5')]
         i = len(existing)
 
-    filename = f'tele_data_{today}_Episode{i}.hdf5'
+    filename = f'episode_{i}.hdf5'
     save_path = os.path.join(data_dir, filename)
 
     with h5py.File(save_path, 'w') as f:
@@ -57,18 +61,41 @@ def save_to_hdf5(buffer, i=None):
         obs = f.create_group('observations')
         imgs = obs.create_group('images')
 
-        N = len(buffer['action'])
+        # N = len(buffer['action'])
 
-        # Create image datasets
+        # # Create image datasets
+        # for cam in buffer['observations']['images']:
+        #     imgs.create_dataset(cam, data=np.array(buffer['observations']['images'][cam], dtype=np.uint8))
+
+        # # qpos, qvel, action
+        # obs.create_dataset('qpos', data=np.array(buffer['observations']['qpos'], dtype=np.float64))
+        # obs.create_dataset('qvel', data=np.array(buffer['observations']['qvel'], dtype=np.float64))
+        # f.create_dataset('action', data=np.array(buffer['action'], dtype=np.float64))
+
+        # print(f"[HDF5] Saved {N} timesteps to {save_path}")
+        # return i
+
+        # padding 추가 버전
+                # 고정된 길이로 초기화 (패딩 포함)
         for cam in buffer['observations']['images']:
-            imgs.create_dataset(cam, data=np.array(buffer['observations']['images'][cam], dtype=np.uint8))
+            imgs.create_dataset(cam, (FIXED_EPISODE_LEN, 480, 640, 3), dtype='uint8')
+        obs.create_dataset('qpos', (FIXED_EPISODE_LEN, 7), dtype='float64')
+        obs.create_dataset('qvel', (FIXED_EPISODE_LEN, 7), dtype='float64')
+        f.create_dataset('action', (FIXED_EPISODE_LEN, 7), dtype='float64')
+        f.create_dataset('is_pad', (FIXED_EPISODE_LEN,), dtype='bool')
 
-        # qpos, qvel, action
-        obs.create_dataset('qpos', data=np.array(buffer['observations']['qpos'], dtype=np.float64))
-        obs.create_dataset('qvel', data=np.array(buffer['observations']['qvel'], dtype=np.float64))
-        f.create_dataset('action', data=np.array(buffer['action'], dtype=np.float64))
+        real_len = len(buffer['action'])
+        for t in range(FIXED_EPISODE_LEN):
+            is_padding = t >= real_len
+            idx = min(t, real_len - 1)  # 마지막 상태를 복사
+            for cam in buffer['observations']['images']:
+                imgs[cam][t] = buffer['observations']['images'][cam][idx]
+            obs['qpos'][t] = buffer['observations']['qpos'][idx]
+            obs['qvel'][t] = buffer['observations']['qvel'][idx]
+            f['action'][t] = buffer['action'][idx]
+            f['is_pad'][t] = is_padding
 
-        print(f"[HDF5] Saved {N} timesteps to {save_path}")
+        print(f"[HDF5] Saved {real_len} steps with padding to {save_path}")
         return i
 
 def gripper_callback(msg):
@@ -219,7 +246,7 @@ def main():
 
             image0 = color_image0.copy()
             image1 = color_image1.copy()
-            
+
             buffer['observations']['images']['cam_high'].append(image0)
             buffer['observations']['images']['cam_low'].append(image1)
 

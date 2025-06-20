@@ -2,8 +2,9 @@
 
 # 수정 List:
 # 1. action에서 Leader, 그리퍼의 pos 받게 하기 <- Joint Copy 방법 설치되면 하기
-# 2. Image shape: 480,640,3
+# 2. Image shape: 480,640,3 <- 완료
 # 3. 초기위치 설정 필요 <- 해보고 성능 안좋으면 추가하기
+# 4. 조기 종료시 padding 되게 추가(act는 actiond sequence를 출력하므로 모든 episode의 demonstration 길이가 같아야함)
 
 import sys
 sys.path.append('/home/vision/catkin_ws/src/robotory_rb10_rt/scripts')
@@ -40,16 +41,16 @@ def init_buffer():
 
 def save_to_hdf5(buffer, i=None):
     today = datetime.now().strftime('%m%d')  # '0616' 형식
-    data_dir = '/home/vision/catkin_ws/src/teleop_data/act_data'
+    data_dir = f'/home/vision/catkin_ws/src/teleop_data/act_data/{today}'
     if not os.path.isdir(data_dir):
         os.makedirs(data_dir)
 
     if i is None:
         # 자동 인덱스 결정: 같은 날짜의 기존 파일 개수 세기
-        existing = [f for f in os.listdir(data_dir) if f.startswith(f'tele_data_{today}_') and f.endswith('.hdf5')]
+        existing = [f for f in os.listdir(data_dir) if f.startswith(f'episode_') and f.endswith('.hdf5')]
         i = len(existing)
 
-    filename = f'tele_data_{today}_Episode{i}.hdf5'
+    filename = f'episode_{i}.hdf5'
     save_path = os.path.join(data_dir, filename)
 
     with h5py.File(save_path, 'w') as f:
@@ -203,19 +204,25 @@ def main():
             color_image0 = np.asanyarray(color_frame0.get_data())
             color_image1 = np.asanyarray(color_frame1.get_data())
 
-            h, w = color_image0.shape[:2]
-            start_x = (w - CROP_SIZE) // 2
-            image0 = color_image0[:, start_x:start_x+CROP_SIZE]
-            image1 = color_image1[:, start_x:start_x+CROP_SIZE]
+            # Image shape 후처리
+            # h, w = color_image0.shape[:2]
+            # start_x = (w - CROP_SIZE) // 2
+            # image0 = color_image0[:, start_x:start_x+CROP_SIZE]
+            # image1 = color_image1[:, start_x:start_x+CROP_SIZE]
 
-            image0 = cv2.resize(image0, (120, 120))
-            image1 = cv2.resize(image1, (120, 120))
+            # image0 = cv2.resize(image0, (120, 120))
+            # image1 = cv2.resize(image1, (120, 120))
+            # buffer['observations']['images']['cam_high'].append(image0.copy())
+            # buffer['observations']['images']['cam_low'].append(image1.copy())
 
             # for cam_name in ['cam_high', 'cam_low', 'cam_left_wrist', 'cam_right_wrist']:
             # camera 여러 대 사용시 주석 해제
 
-            buffer['observations']['images']['cam_high'].append(image0.copy())
-            buffer['observations']['images']['cam_low'].append(image1.copy())
+            image0 = color_image0.copy()
+            image1 = color_image1.copy()
+
+            buffer['observations']['images']['cam_high'].append(image0)
+            buffer['observations']['images']['cam_low'].append(image1)
 
 
             ## action 계산 (Leader의 qpos)

@@ -204,10 +204,14 @@ def eval_bc(config, ckpt_name, save_episode=True):
         rollout_id += 0
         ### set task
         # 사용 X
-        # if 'sim_transfer_cube' in task_name:
-        #     BOX_POSE[0] = sample_box_pose() # used in sim reset
-        # elif 'sim_insertion' in task_name:
-        #     BOX_POSE[0] = np.concatenate(sample_insertion_pose()) # used in sim reset
+        if 'sim_transfer_cube' in task_name:
+            BOX_POSE[0] = sample_box_pose() # used in sim reset
+        elif 'sim_insertion' in task_name:
+            BOX_POSE[0] = np.concatenate(sample_insertion_pose()) # used in sim reset
+        
+        # task 추가
+        elif 'rb_transfer_can' in task_name:
+            pass
 
         ts = env.reset()
 

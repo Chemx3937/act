@@ -87,8 +87,14 @@ def get_norm_stats(dataset_dir, num_episodes):
             action = root['/action'][()]
         all_qpos_data.append(torch.from_numpy(qpos))
         all_action_data.append(torch.from_numpy(action))
+
+    # 원본: 모든 Episode의 hdf5 길이가 같게 설정해서 전체 demonstration data의 평균 표준편차 구하게 함
     all_qpos_data = torch.stack(all_qpos_data)
     all_action_data = torch.stack(all_action_data)
+
+    # # 수정: 모든 Episode의 hdf5 길이가 달라도 전체 demonstration data의 평균 표준편차 구하게 함
+    # all_qpos_data = torch.cat(all_qpos_data, dim=0)
+    # all_action_data = torch.cat(all_action_data, dim=0)
     all_action_data = all_action_data
 
     # normalize action data

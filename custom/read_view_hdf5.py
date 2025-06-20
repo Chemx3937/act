@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # 파일 경로 (현재 디렉토리에 있는 경우)
-file_path = "tele_data_0614_act.hdf5"
+file_path = "/home/chem/act/data/rb_transfer_can/act_data/tele_data_0619_Episode21.hdf5"
 
 # HDF5 구조 탐색 함수
 def explore_hdf5_structure(g, path="/"):
