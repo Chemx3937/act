@@ -70,8 +70,20 @@ class EpisodicDataset(torch.utils.data.Dataset):
 
         # normalize image and change dtype to float
         image_data = image_data / 255.0
-        action_data = (action_data - self.norm_stats["action_mean"]) / self.norm_stats["action_std"]
-        qpos_data = (qpos_data - self.norm_stats["qpos_mean"]) / self.norm_stats["qpos_std"]
+
+        # 원본
+        # action_data = (action_data - self.norm_stats["action_mean"]) / self.norm_stats["action_std"]
+        # qpos_data = (qpos_data - self.norm_stats["qpos_mean"]) / self.norm_stats["qpos_std"]
+        
+        # 수정
+        action_mean = torch.tensor(self.norm_stats["action_mean"]).float()
+        action_std = torch.tensor(self.norm_stats["action_std"]).float()
+        action_data = (action_data - action_mean) / action_std
+        
+        qpos_mean = torch.tensor(self.norm_stats["qpos_mean"]).float()
+        qpos_std = torch.tensor(self.norm_stats["qpos_std"]).float()
+        qpos_data = (qpos_data - qpos_mean) / qpos_std
+
 
         return image_data, qpos_data, action_data, is_pad
 
@@ -88,13 +100,8 @@ def get_norm_stats(dataset_dir, num_episodes):
         all_qpos_data.append(torch.from_numpy(qpos))
         all_action_data.append(torch.from_numpy(action))
 
-    # 원본: 모든 Episode의 hdf5 길이가 같게 설정해서 전체 demonstration data의 평균 표준편차 구하게 함
     all_qpos_data = torch.stack(all_qpos_data)
     all_action_data = torch.stack(all_action_data)
-
-    # # 수정: 모든 Episode의 hdf5 길이가 달라도 전체 demonstration data의 평균 표준편차 구하게 함
-    # all_qpos_data = torch.cat(all_qpos_data, dim=0)
-    # all_action_data = torch.cat(all_action_data, dim=0)
     all_action_data = all_action_data
 
     # normalize action data

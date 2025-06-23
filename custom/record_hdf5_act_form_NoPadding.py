@@ -2,8 +2,9 @@
 
 # 수정 List:
 # 1. action에서 Leader, 그리퍼의 pos 받게 하기 <- Joint Copy 방법 설치되면 하기
-# 2. Image shape: 480,640,3
+# 2. Image shape: 480,640,3 <- 완료
 # 3. 초기위치 설정 필요 <- 해보고 성능 안좋으면 추가하기
+# 4. 조기 종료시 padding 되게 추가(act는 actiond sequence를 출력하므로 모든 episode의 demonstration 길이가 같아야함)
 
 import sys
 sys.path.append('/home/vision/catkin_ws/src/robotory_rb10_rt/scripts')
@@ -38,10 +39,6 @@ def init_buffer():
         'action': []
     }
 
-# 모든 Demonstration 길이 동일하게 하기위해 추가
-FIXED_EPISODE_LEN = 250
-
-
 def save_to_hdf5(buffer, i=None):
     today = datetime.now().strftime('%m%d')  # '0616' 형식
     data_dir = f'/home/vision/catkin_ws/src/teleop_data/act_data/{today}'
@@ -61,41 +58,18 @@ def save_to_hdf5(buffer, i=None):
         obs = f.create_group('observations')
         imgs = obs.create_group('images')
 
-        # N = len(buffer['action'])
+        N = len(buffer['action'])
 
-        # # Create image datasets
-        # for cam in buffer['observations']['images']:
-        #     imgs.create_dataset(cam, data=np.array(buffer['observations']['images'][cam], dtype=np.uint8))
-
-        # # qpos, qvel, action
-        # obs.create_dataset('qpos', data=np.array(buffer['observations']['qpos'], dtype=np.float64))
-        # obs.create_dataset('qvel', data=np.array(buffer['observations']['qvel'], dtype=np.float64))
-        # f.create_dataset('action', data=np.array(buffer['action'], dtype=np.float64))
-
-        # print(f"[HDF5] Saved {N} timesteps to {save_path}")
-        # return i
-
-        # padding 추가 버전
-                # 고정된 길이로 초기화 (패딩 포함)
+        # Create image datasets
         for cam in buffer['observations']['images']:
-            imgs.create_dataset(cam, (FIXED_EPISODE_LEN, 480, 640, 3), dtype='uint8')
-        obs.create_dataset('qpos', (FIXED_EPISODE_LEN, 7), dtype='float64')
-        obs.create_dataset('qvel', (FIXED_EPISODE_LEN, 7), dtype='float64')
-        f.create_dataset('action', (FIXED_EPISODE_LEN, 7), dtype='float64')
-        f.create_dataset('is_pad', (FIXED_EPISODE_LEN,), dtype='bool')
+            imgs.create_dataset(cam, data=np.array(buffer['observations']['images'][cam], dtype=np.uint8))
 
-        real_len = len(buffer['action'])
-        for t in range(FIXED_EPISODE_LEN):
-            is_padding = t >= real_len
-            idx = min(t, real_len - 1)  # 마지막 상태를 복사
-            for cam in buffer['observations']['images']:
-                imgs[cam][t] = buffer['observations']['images'][cam][idx]
-            obs['qpos'][t] = buffer['observations']['qpos'][idx]
-            obs['qvel'][t] = buffer['observations']['qvel'][idx]
-            f['action'][t] = buffer['action'][idx]
-            f['is_pad'][t] = is_padding
+        # qpos, qvel, action
+        obs.create_dataset('qpos', data=np.array(buffer['observations']['qpos'], dtype=np.float64))
+        obs.create_dataset('qvel', data=np.array(buffer['observations']['qvel'], dtype=np.float64))
+        f.create_dataset('action', data=np.array(buffer['action'], dtype=np.float64))
 
-        print(f"[HDF5] Saved {real_len} steps with padding to {save_path}")
+        print(f"[HDF5] Saved {N} timesteps to {save_path}")
         return i
 
 def gripper_callback(msg):

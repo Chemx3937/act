@@ -1,5 +1,17 @@
 # ACT: Action Chunking with Transformers
 
+# Customized:
+## Custom:
+- ``record_hdf5_act_form.py``: Get demonstration dataset
+- ``read_view_hdf5.py``: Check the hdf5 file
+- ``read_hdf5_shape.py``: Check the data shape
+
+## Modified Scripts:
+- ``detr_vae.py``: state(qpos) & action=14 -> state(qpos) & action = 7
+- ``utils.py``: float64 -> float32
+- ``constans.py``@aloha_scripts: Add task and put my data dir
+- ``imitate_episodes.py``: state_dim = 14 -> 7
+
 ### *New*: [ACT tuning tips](https://docs.google.com/document/d/1FVIZfoALXg_ZkYKaYVh-qOlaXveq5CtvJHXkY25eYhs/edit?usp=sharing)
 TL;DR: if your ACT policy is jerky or pauses in the middle of an episode, just train for longer! Success rate and smoothness can improve way after loss plateaus.
 
