@@ -181,8 +181,11 @@ def eval_bc(config, ckpt_name, save_episode=True):
 
     # load environment
     if real_robot:
-        from aloha_scripts.robot_utils import move_grippers # requires aloha
-        from aloha_scripts.real_env import make_real_env # requires aloha
+        # from aloha_scripts.robot_utils import move_grippers # requires aloha
+        # from aloha_scripts.real_env import make_real_env # requires aloha
+        from custom.custom_robot_utils import move_grippers # requires aloha
+        from custom.custom_real_env import make_real_env # requires aloha
+
         env = make_real_env(init_node=True)
         env_max_reward = 0
     else:
@@ -278,6 +281,7 @@ def eval_bc(config, ckpt_name, save_episode=True):
                 target_qpos = action
 
                 ### step the environment
+                # action을 실행하게 하는 부분
                 ts = env.step(target_qpos)
 
                 ### for visualization

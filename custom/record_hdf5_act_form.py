@@ -2,7 +2,7 @@
 
 # 수정 List:
 # 1. action에서 Leader, 그리퍼의 pos 받게 하기 <- Joint Copy 방법 설치되면 하기
-# 2. Image shape: 480,640,3
+# 2. Image shape: 480,640,3 (완)
 # 3. 초기위치 설정 필요 <- 해보고 성능 안좋으면 추가하기
 
 import sys
