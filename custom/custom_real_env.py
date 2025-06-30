@@ -15,10 +15,12 @@ import dm_env
 from custom_constants import DT, START_ARM_POSE, MASTER_GRIPPER_JOINT_NORMALIZE_FN, PUPPET_GRIPPER_JOINT_UNNORMALIZE_FN
 from custom_constants import PUPPET_GRIPPER_POSITION_NORMALIZE_FN, PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN
 from custom_constants import PUPPET_GRIPPER_JOINT_OPEN, PUPPET_GRIPPER_JOINT_CLOSE
-from custom_robot_utils import Recorder, ImageRecorder
+# from custom_robot_utils import Recorder, ImageRecorder
+from test_custom_robot_utils import Recorder, ImageRecorder, MAX_GRIP
+
 from custom_robot_utils import setup_master_bot, setup_puppet_bot, move_arms, move_grippers
-from interbotix_xs_modules.recorder_arm import InterbotixManipulatorXS
-from interbotix_xs_msgs.msg import JointSingleCommand
+# from interbotix_xs_modules.recorder_arm import InterbotixManipulatorXS
+# from interbotix_xs_msgs.msg import JointSingleCommand
 
 import IPython
 e = IPython.embed
@@ -38,18 +40,22 @@ class RealEnv:
 
     # def __init__(self, init_node, setup_robots=True):
     def __init__(self, init_node):
-        self.follower_bot = InterbotixManipulatorXS(robot_model="vx300s", group_name="recorder_arm", gripper_name="gripper",
-                                                       robot_name=f'puppet_left', init_node=init_node)
+        # self.follower_bot = InterbotixManipulatorXS(robot_model="vx300s", group_name="recorder_arm", gripper_name="gripper",
+        #                                                robot_name=f'puppet_left', init_node=init_node)
 
         # self,recorder_arm 부분에서 Recoder 클래스로 rb, 그리퍼 연결하므로 필요 X
         # if setup_robots:
         #     self.setup_robots()
 
         # RB,Gripper의 state, 제어 명령을 내릴수 있게 연결시키는 Recorder 클래스 객체 생성
-        self.recorder_arm = Recorder('left', init_node=False)
+        # self.recorder_arm = Recorder(init_node=False)
+        self.recorder_arm = Recorder(init_node=init_node)
+
+        # self.recorder_arm = Recorder('left', init_node=False)
         # self.recorder_right = Recorder('right', init_node=False)
         # realsense 연결시키는 ImageRecorder 클래스 객체 생성
-        self.image_recorder = ImageRecorder(init_node=False)
+        # self.image_recorder = ImageRecorder(init_node=False)
+        self.image_recorder = ImageRecorder(init_node=init_node)
 
         # JointSingleCommand는 interbotix_xs_msgs.msg로 aloha에서만 사능한 명령어이므로 사용 X
         # self.gripper_command = JointSingleCommand(name="gripper") 
@@ -57,12 +63,16 @@ class RealEnv:
     # def setup_robots(self):
     #     setup_puppet_bot(self.follower_bot)
 
-    def get_qpos(self):
-        qpos_raw = self.recorder_arm.qpos
-        follower_arm_qpos = qpos_raw[:6]
-        follower_gripper_qpos = [PUPPET_GRIPPER_POSITION_NORMALIZE_FN(qpos_raw[7])] # this is position not joint
-        return np.concatenate([follower_arm_qpos, follower_gripper_qpos])
+    # 원본
+    # def get_qpos(self):
+    #     qpos_raw = self.recorder_arm.qpos
+    #     follower_arm_qpos = qpos_raw[:6]
+    #     follower_gripper_qpos = [PUPPET_GRIPPER_POSITION_NORMALIZE_FN(qpos_raw[7])] # this is position not joint
+    #     return np.concatenate([follower_arm_qpos, follower_gripper_qpos])
 
+    # 수정 <- custom_robot_utils.py에 있는 get_qpos 사용하도록 변경
+    def get_qpos(self):
+        return self.recorder_arm.get_qpos()
 
     # def get_qvel(self):
     #     qvel_raw = self.recorder_arm.qvel
@@ -84,19 +94,31 @@ class RealEnv:
     #     self.gripper_command.cmd = gripper_desired_joint
     #     self.follower_bot.gripper.core.pub_single.publish(self.gripper_command)
 
-    # 수정 <- 미완(파라미터 robot_utils.py에서 정한 걸로 넣어줘야 함)
-    def set_gripper_pose(self, desired_pos_normalized):
-        return self.recorder_arm.set_gripper_pose()
+    # 수정 <- robot_utils.py에서 정의
 
-
+    # custom_constatns에서 정의한 START_ARM_POSE로 움직이게 함
     def _reset_joints(self):
         reset_position = START_ARM_POSE[:6]
-        move_arms([self.follower_bot], [reset_position], move_time=1)
+        self.recorder_arm.move_arm(reset_position, move_time=1.0)
+        # move_arms([self.follower_bot], [reset_position], move_time=1)
 
+    # 그리퍼가 완전히 열리게 함
     def _reset_gripper(self):
-        """Set to position mode and do position resets: first open then close. Then change back to PWM mode"""
-        move_grippers([self.follower_bot], [PUPPET_GRIPPER_JOINT_OPEN] * 2, move_time=0.5)
-        move_grippers([self.follower_bot], [PUPPET_GRIPPER_JOINT_CLOSE] * 2, move_time=1)
+        """
+        1. 절반 닫기 (폭 550)
+        2. 완전히 열기 (폭 1100)
+        """
+        half_closed = 550.0
+        fully_open = 1100.0
+
+        self.recorder_arm.move_gripper(half_closed, move_time=0.5)
+        self.recorder_arm.move_gripper(fully_open, move_time=1.0)
+
+
+    # def _reset_gripper(self):
+    #     """Set to position mode and do position resets: first open then close. Then change back to PWM mode"""
+    #     move_grippers([self.follower_bot], [PUPPET_GRIPPER_JOINT_OPEN] * 2, move_time=0.5)
+    #     move_grippers([self.follower_bot], [PUPPET_GRIPPER_JOINT_CLOSE] * 2, move_time=1)
 
     def get_observation(self):
         obs = collections.OrderedDict()
@@ -112,7 +134,7 @@ class RealEnv:
     def reset(self, fake=False):
         if not fake:
             # Reboot puppet robot gripper motors
-            self.follower_bot.dxl.robot_reboot_motors("single", "gripper", True)
+            # self.follower_bot.dxl.robot_reboot_motors("single", "gripper", True)
             self._reset_joints()
             self._reset_gripper()
         return dm_env.TimeStep(
@@ -121,17 +143,21 @@ class RealEnv:
             discount=None,
             observation=self.get_observation())
 
+    # custom_robot_utils.py에서 새로 정의한 
     # step별 action을 실행시키는 부분으로 로봇 움직이게 함
     def step(self, action):
-        state_len = int(len(action) / 2)
-        follower_action = action[:state_len]
-        # left_action = action[:state_len]
-        # right_action = action[state_len:]
+        # state_len = int(len(action) / 2)
+        # follower_action = action[:state_len]
+        # # left_action = action[:state_len]
+        # # right_action = action[state_len:]
+
+        follower_action = action
 
         # rb, 그리퍼에 action 적용시켜서 움직이게 하는 부분
         # self.follower_bot.recorder_arm.set_joint_positions(left_action[:6], blocking=False)
-        self.follower_bot.recorder_arm.set_joint_positions(follower_action[:6], blocking=False)
-        self.set_gripper_pose(follower_action[-1])
+        # self.follower_bot.recorder_arm.set_joint_positions(follower_action[:6], blocking=False)
+        self.recorder_arm.set_joint_positions(follower_action[:6])
+        self.recorder_arm.set_gripper_pose(follower_action[-1])
         # self.set_gripper_pose(left_action[-1], right_action[-1])
         time.sleep(DT)
         return dm_env.TimeStep(
