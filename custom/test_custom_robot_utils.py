@@ -111,16 +111,27 @@ class Recorder:
 
         return np.concatenate([joint_rad, [delta_grip_norm]])
 
-    def set_joint_positions(self, joint_rad: np.ndarray):
+
+    def set_joint_positions(self, joint_rad: np.ndarray, delta_theta_max=np.deg2rad(5.0)):
         """
         joint_rad (6,) → degree 변환 → cobot API 전송
         """
         if joint_rad.shape != (6,):
             raise ValueError("Expected shape (6,), got", joint_rad.shape)
 
-        joint_deg = joint_rad * 180 / np.pi
-        msg = f"move_servo_j(jnt[{','.join(f'{j:.3f}' for j in joint_deg)}],0.002,0.1,0.02,0.2)"
+        # 현재 조인트 상태
+        current_joint_rad = np.array(GetCurrentSplitedJoint())[:6] * np.pi / 180.0
+
+        # Δθ 계산 및 제한
+        delta = joint_rad - current_joint_rad
+        delta_clipped = np.clip(delta, -delta_theta_max, delta_theta_max)
+        clipped_target_rad = current_joint_rad + delta_clipped
+
+        # rad → deg 변환
+        joint_deg = clipped_target_rad * 180.0 / np.pi
+
         # ServoJ(joint_deg, time1=0.002, time2=0.1, gain=0.02, lpf_gain=0.2)
+        msg = f"move_servo_j(jnt[{','.join(f'{j:.3f}' for j in joint_deg)}],0.002,0.1,0.02,0.2)"
         SendCOMMAND(msg, CMD_TYPE.MOVE)
 
     def set_gripper_pose(self, delta_grip_norm: float):
@@ -162,7 +173,9 @@ class Recorder:
 
     # 추가해야 되는 것
     # reset 시킬때만 Joint 움직이게 하는 메소드
-    def move_arm(self, target_pose, move_time=1.0):
+    # 순간 변화량 제한 추가
+
+    def move_arm(self, target_pose, move_time=1.0, delta_theta_max=np.deg2rad(5.0)):
         from custom_constants import DT
 
         """
@@ -173,7 +186,10 @@ class Recorder:
         current_pose = self.get_qpos()[:6]
         traj = np.linspace(current_pose, target_pose, num_steps)
         for step_pose in traj:
-            self.set_joint_positions(step_pose)
+            delta = step_pose - self.get_qpos()[:6]
+            delta = np.clip(delta, -delta_theta_max, delta_theta_max)
+            limited_pose = self.get_qpos()[:6] + delta
+            self.set_joint_positions(limited_pose)
             time.sleep(DT)
 
     def move_gripper(self, target_grip, move_time=1.0):

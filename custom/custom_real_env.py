@@ -235,5 +235,6 @@ def test_real_teleop():
 
 
 if __name__ == '__main__':
-    test_real_teleop()
+    # test_real_teleop()
+    pass
 
